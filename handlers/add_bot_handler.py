@@ -3,10 +3,17 @@ from aiogram.dispatcher.filters import CommandObject
 from aiogram.exceptions import TelegramUnauthorizedError
 from aiogram.utils.token import TokenValidationError
 
-from app import on_bot_startup, on_bot_shutdown
+from app import set_commands, ADMIN_ID
 from polling_manager import PollingManager
 from aiogram.utils.markdown import html_decoration as fmt
 
+async def on_bot_startup(bot: Bot):
+    await set_commands(bot)
+    await bot.send_message(chat_id=ADMIN_ID, text="Bot started!")
+
+
+async def on_bot_shutdown(bot: Bot):
+    await bot.send_message(chat_id=ADMIN_ID, text="Bot shutdown!")
 
 async def add_bot(
     message: types.Message,

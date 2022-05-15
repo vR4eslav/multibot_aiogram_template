@@ -2,15 +2,14 @@ import asyncio
 import logging
 from typing import List
 
-from aiogram import Bot, Dispatcher, types
-from aiogram.dispatcher.filters.command import Command, CommandObject, CommandStart
-from aiogram.exceptions import TelegramUnauthorizedError
+from aiogram import Bot, Dispatcher
+from aiogram.dispatcher.filters.command import Command, CommandStart
 from aiogram.types import BotCommand, BotCommandScopeDefault
-from aiogram.utils.token import TokenValidationError
 
-from handlers.add_bot import add_bot
+from handlers.add_bot_handler import *
 from handlers.echo import echo
 from handlers.start import start
+from handlers.stop_bot_handler import stop_bot
 from polling_manager import PollingManager
 
 logger = logging.getLogger(__name__)
@@ -36,15 +35,6 @@ async def set_commands(bot: Bot):
     await bot.set_my_commands(commands=commands, scope=BotCommandScopeDefault())
 
 
-async def on_bot_startup(bot: Bot):
-    await set_commands(bot)
-    await bot.send_message(chat_id=ADMIN_ID, text="Bot started!")
-
-
-async def on_bot_shutdown(bot: Bot):
-    await bot.send_message(chat_id=ADMIN_ID, text="Bot shutdown!")
-
-
 async def on_startup(bots: List[Bot]):
     for bot in bots:
         await on_bot_startup(bot)
@@ -53,12 +43,6 @@ async def on_startup(bots: List[Bot]):
 async def on_shutdown(bots: List[Bot]):
     for bot in bots:
         await on_bot_shutdown(bot)
-
-
-
-
-
-
 
 
 async def main():
